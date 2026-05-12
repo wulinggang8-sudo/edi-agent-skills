@@ -225,39 +225,3 @@ def run_mysql_query(sql: str):
 
     return result.stdout
 
-# 查询策略
-
-如果用户给订单号，例如：
-
-5502240467
-
-优先按以下顺序查询：
-SELECT *
-FROM edi_transaction_log
-WHERE trans_key = '5502240467'
-   OR trans_key LIKE '5502240467%'
-ORDER BY `timestamp` DESC
-LIMIT 20;
-如果没有结果，再查：
-SELECT DocID, NativeID, SenderID, ReceiverID, DocTypeID, RoutingStatus, UserStatus, LastModified
-FROM bizdoc
-WHERE NativeID = '5502240467'
-   OR NativeID LIKE '5502240467%'
-ORDER BY LastModified DESC
-LIMIT 20;
-
-# 输出要求
-
-默认中文回答。
-
-# 输出顺序：
-
-结论
-查询到的关键记录
-使用的 SQL
-如果无结果，说明下一步建议
-
-不要向用户展示完整临时密码。
-不要要求用户提供 mysql 连接命令。
-不要使用历史 token。
-每次查询前都必须重新生成 connection-token。
