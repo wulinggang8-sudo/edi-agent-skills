@@ -150,6 +150,40 @@ Agent 当前错误地使用了：
 
 如果 Agent 查询失败：
 应优先检查连接实现方式，而不是直接判断 JumpServer 故障。
+对于无 GUI Agent：
+
+db_client 的核心含义：
+
+- 使用 JumpServer 官方数据库连接协议
+- 而不是自己实现 mysql proxy
+- 也不是 websocket 模拟 web terminal
+
+Agent 不需要真的打开 DBeaver 界面。
+
+DBeaver / Navicat 只是：
+已验证 db_client 链路可用的参考实现。
+
+真正重要的是：
+
+- connection-token 获取方式
+- connect_method = db_client
+- 官方数据库客户端协议
+- 官方 token 使用方式
+
+如果 Agent 无法直接实现 db_client 协议：
+
+则应：
+
+- 使用 MCP 中转
+- 使用本地数据库桥接服务
+- 使用官方 SDK
+- 或调用已经建立好的数据库执行服务
+
+而不是：
+
+- websocket 模拟 web_cli
+- mysql token CLI 拼接
+- pymysql 直连 33061
 
 不推荐：
 
