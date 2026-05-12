@@ -46,6 +46,8 @@
 - 测试环境必须使用 web_cli 方式，不要使用 db_client 或 MySQL Proxy 33061 直连方式。
 - 如果获取 token 成功但连接失败，应优先检查 input_secret 加密方式，而不是直接判断 JumpServer 故障。
 - 当前测试环境已验证可通过 Luna Web Terminal 正常连接 wm1015。
+- 不要自行拼接 mysql -u token -psecret -h jumpserver.item.com -P 33061 命令。
+- 测试环境默认通过 Luna Web Terminal / web_cli 建立连接。
 
 ### 测试环境获取临时 token 示例
 
