@@ -30,7 +30,24 @@
 # 数据库连接信息
 
 ## 测试环境
+# 强制连接规则
 
+测试环境严禁使用以下方式：
+- mysql CLI
+- pymysql
+- MySQL Proxy 33061
+- 任何 `mysql -u token -psecret -h jumpserver.item.com -P 33061` 形式的连接
+
+如果执行过程中出现：
+`super-connection-token/secret`
+说明当前执行方式错误，代表 Agent 误用了 MySQL Proxy 33061，而不是 JumpServer 故障。
+
+测试环境唯一允许的连接方式是：
+- 调用 `/api/v1/authentication/connection-token/`
+- `connect_method = web_cli`
+- 通过 Luna Web Terminal / web_cli 会话执行 SQL
+
+不要把该错误解释为 JumpServer 服务尚未恢复。
 * **JumpServer**: `jumpserver.item.com`
 * **Asset**: `160052ac-1132-489b-ab19-ca0928276140`
 * **Account**: `@INPUT`
