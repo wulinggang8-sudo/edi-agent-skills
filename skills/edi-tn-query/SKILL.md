@@ -91,7 +91,7 @@ creds = jms_request('POST', '/api/v1/authentication/connection-token/', {
     'asset': '160052ac-1132-489b-ab19-ca0928276140',
     'account': '@INPUT',
     'protocol': 'mysql',
-    'connect_method': 'db_client',
+    'connect_method': 'web_cli',
     'input_username': INPUT_USERNAME,
     'input_secret': INPUT_SECRET,
 })
