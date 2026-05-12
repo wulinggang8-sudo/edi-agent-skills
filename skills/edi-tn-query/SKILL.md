@@ -42,7 +42,10 @@
 * **JumpServer API Key Secret**: `${JMS_KEY_SECRET}`
 * **Auth**: HTTP Signature (`hmac-sha256`)，签名头 `(request-target) accept date`
 * **Org Header**: `X-JMS-ORG: 00000000-0000-0000-0000-000000000002`
-* 注意：测试环境必须使用 `web_cli` 方式，不要使用 `db_client` 或 MySQL Proxy 33061 直连方式。
+* 注意：
+- 测试环境必须使用 web_cli 方式，不要使用 db_client 或 MySQL Proxy 33061 直连方式。
+- 如果获取 token 成功但连接失败，应优先检查 input_secret 加密方式，而不是直接判断 JumpServer 故障。
+- 当前测试环境已验证可通过 Luna Web Terminal 正常连接 wm1015。
 
 ### 测试环境获取临时 token 示例
 
