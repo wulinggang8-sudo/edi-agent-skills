@@ -122,6 +122,34 @@ Agent 当前错误地使用了：
 - DBeaver
 - JumpServerClient
 - MCP + 官方 db_client
+- db_client 正确使用方式
+
+获取 connection-token 后：
+
+不要：
+
+- 自己拼 mysql CLI
+- 自己 websocket 模拟
+- 自己实现 JumpServer terminal 协议
+- 自己实现 MySQL Proxy token 登录
+
+应当：
+
+- 使用官方 db_client / db_guide 方式
+- 通过 JumpServerClient 唤起 DBeaver / Navicat / DataGrip
+- 或使用 JumpServer 官方支持的数据库客户端协议
+
+当前已验证：
+
+- JumpServerClient 可正常唤起 DBeaver
+- wm1015 可正常连接
+- SELECT 1 执行成功
+
+因此：
+测试环境数据库当前是可用状态。
+
+如果 Agent 查询失败：
+应优先检查连接实现方式，而不是直接判断 JumpServer 故障。
 
 不推荐：
 
