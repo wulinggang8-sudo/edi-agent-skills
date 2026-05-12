@@ -225,7 +225,7 @@ def run_mysql_query(sql: str):
 
     return result.stdout
 
-查询策略
+# 查询策略
 
 如果用户给订单号，例如：
 
@@ -246,11 +246,11 @@ WHERE NativeID = '5502240467'
 ORDER BY LastModified DESC
 LIMIT 20;
 
-输出要求
+# 输出要求
 
 默认中文回答。
 
-输出顺序：
+# 输出顺序：
 
 结论
 查询到的关键记录
