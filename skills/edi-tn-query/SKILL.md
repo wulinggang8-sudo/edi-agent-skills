@@ -32,7 +32,6 @@
 ## 测试环境
 
 * **JumpServer**: `jumpserver.item.com`
-* **MySQL Proxy Port**: `33061`
 * **Asset**: `160052ac-1132-489b-ab19-ca0928276140`
 * **Account**: `@INPUT`
 * **Connect Method**: `web_cli`
@@ -43,6 +42,7 @@
 * **JumpServer API Key Secret**: `${JMS_KEY_SECRET}`
 * **Auth**: HTTP Signature (`hmac-sha256`)，签名头 `(request-target) accept date`
 * **Org Header**: `X-JMS-ORG: 00000000-0000-0000-0000-000000000002`
+* 注意：测试环境必须使用 `web_cli` 方式，不要使用 `db_client` 或 MySQL Proxy 33061 直连方式。
 
 ### 测试环境获取临时 token 示例
 
