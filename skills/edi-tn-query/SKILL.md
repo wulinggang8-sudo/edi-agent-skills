@@ -35,7 +35,7 @@
 * **MySQL Proxy Port**: `33061`
 * **Asset**: `160052ac-1132-489b-ab19-ca0928276140`
 * **Account**: `@INPUT`
-* **Connect Method**: `db_client`
+* **Connect Method**: `web_cli`
 * **Database**: `wm1015`
 * **Backend User**: `${EDI_DB_USER}`
 * **Backend Password**: `${EDI_DB_PASSWORD}`
