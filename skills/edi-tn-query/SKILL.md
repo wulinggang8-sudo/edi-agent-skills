@@ -32,26 +32,105 @@
 ## 测试环境
 # 强制连接规则
 
-测试环境严禁使用以下方式：
+测试环境允许以下两种官方连接方式：
+
+## 1. web_cli（Luna Web Terminal）
+
+用途：
+
+- 浏览器 Web Terminal 手工执行 SQL
+- 人工排查
+- 页面调试
+
+特点：
+
+- 依赖浏览器会话
+- 不适合 Agent 自动化 SQL 查询
+- 不建议作为程序化数据库访问方式
+
+---
+
+## 2. db_client（推荐）
+
+用途：
+
+- DBeaver
+- Navicat
+- DataGrip
+- JumpServerClient
+- 程序化数据库访问
+
+当前已验证：
+
+- JumpServerClient 可正常唤起 DBeaver
+- 已成功连接 wm1015
+- `SELECT 1` 执行成功
+- db_client 链路正常
+
+推荐连接方式：
+
+- connect_method = db_client
+- 或 connect_method = db_guide
+
+---
+
+# 测试环境严禁以下错误方式
+
+- 手工拼接 mysql token 连接
 - mysql CLI
-- pymysql
-- MySQL Proxy 33061
-- 任何 `mysql -u token -psecret -h jumpserver.item.com -P 33061` 形式的连接
+- pymysql 直连 JumpServer Proxy
+- 任何：
+  mysql -u token -psecret -h jumpserver.item.com -P 33061
+  形式的连接
+- 将临时 token 当作长期数据库账号密码
+- 使用 super-connection-token token 直连数据库
 
-如果执行过程中出现：
-`super-connection-token/secret`
-说明当前执行方式错误，代表 Agent 误用了 MySQL Proxy 33061，而不是 JumpServer 故障。
+---
 
-测试环境唯一允许的连接方式是：
-- 调用 `/api/v1/authentication/connection-token/`
-- `connect_method = web_cli`
-- 通过 Luna Web Terminal / web_cli 会话执行 SQL
+# 关于 super-connection-token/secret 错误
 
-不要把该错误解释为 JumpServer 服务尚未恢复。
+如果出现：
+
+super-connection-token/secret
+
+说明：
+
+Agent 当前错误地使用了：
+
+- MySQL Proxy 33061 token 直连模式
+- 错误 token 使用方式
+
+不代表：
+
+- JumpServer 故障
+- 运维未修复
+- 数据库不可用
+
+当前测试环境已验证：
+
+- web_cli 正常
+- db_client 正常
+- DBeaver 正常连接 wm1015
+
+---
+
+# 推荐实现方式
+
+推荐：
+
+- db_client
+- DBeaver
+- JumpServerClient
+- MCP + 官方 db_client
+
+不推荐：
+
+- mysql token CLI 拼接
+- 自行模拟 JumpServer web terminal websocket
 * **JumpServer**: `jumpserver.item.com`
 * **Asset**: `160052ac-1132-489b-ab19-ca0928276140`
 * **Account**: `@INPUT`
-* **Connect Method**: `web_cli`
+* **Connect Method**: `db_client`
 * **Database**: `wm1015`
 * **Backend User**: `${EDI_DB_USER}`
 * **Backend Password**: `${EDI_DB_PASSWORD}`
@@ -59,12 +138,7 @@
 * **JumpServer API Key Secret**: `${JMS_KEY_SECRET}`
 * **Auth**: HTTP Signature (`hmac-sha256`)，签名头 `(request-target) accept date`
 * **Org Header**: `X-JMS-ORG: 00000000-0000-0000-0000-000000000002`
-* 注意：
-- 测试环境必须使用 web_cli 方式，不要使用 db_client 或 MySQL Proxy 33061 直连方式。
-- 如果获取 token 成功但连接失败，应优先检查 input_secret 加密方式，而不是直接判断 JumpServer 故障。
-- 当前测试环境已验证可通过 Luna Web Terminal 正常连接 wm1015。
-- 不要自行拼接 mysql -u token -psecret -h jumpserver.item.com -P 33061 命令。
-- 测试环境默认通过 Luna Web Terminal / web_cli 建立连接。
+
 
 ### 测试环境获取临时 token 示例
 
@@ -113,7 +187,7 @@ creds = jms_request('POST', '/api/v1/authentication/connection-token/', {
     'asset': '160052ac-1132-489b-ab19-ca0928276140',
     'account': '@INPUT',
     'protocol': 'mysql',
-    'connect_method': 'web_cli',
+    'connect_method': 'db_client',
     'input_username': INPUT_USERNAME,
     'input_secret': INPUT_SECRET,
 })
