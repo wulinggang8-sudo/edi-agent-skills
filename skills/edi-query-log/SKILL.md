@@ -135,7 +135,7 @@ description: webMethods TN / EDI 数据库查询 Skill。支持测试环境 wm10
 - Asset: `cc3d9644-938b-48f8-a6fd-93083af7e862`
 - Account: `@INPUT`
 - Protocol: `mysql`
-- Connect Method: `db_guide`
+- Connect Method: `db_client`
 - Database: `linker_edi`
 - Org Header: `X-JMS-ORG: 00000000-0000-0000-0000-000000000002`
 
@@ -192,7 +192,7 @@ ENV_CONFIG = {
     "prod": {
         "asset": "cc3d9644-938b-48f8-a6fd-93083af7e862",
         "database": "linker_edi",
-        "connect_method": "db_guide",
+        "connect_method": "db_client",
         "input_username": PROD_INPUT_USERNAME,
         "input_secret": PROD_INPUT_SECRET,
     },
