@@ -263,6 +263,185 @@ LIMIT 20;
 每次查询前都必须重新生成 connection-token
 
 
+# 报文重发能力（SubmitTest）
 
+本 Skill 支持将已查询到的 X12 原始报文重新提交到测试接口，用于测试环境报文重发。
+
+---
+
+# 重发接口
+
+- URL:
+  `https://edi-staging.item.com:5555/invoke/ATEST_WLG.TEST:SubmitTest`
+
+- Method:
+  `POST`
+
+- Content-Type:
+  `application/x-www-form-urlencoded`
+
+- Auth:
+  Anonymous（无需认证头）
+
+- Form Field:
+  - `X12`: 原始 X12 报文内容
+
+---
+
+# 重发触发条件
+
+只有当用户明确要求以下动作时，才允许调用重发接口：
+
+- 重发报文
+- resend
+- reprocess
+- 重新推送
+- 重新提交
+- resubmit
+
+如果用户只是查询、分析、查看报文，不允许自动重发。
+
+---
+
+# 重发前必须执行
+
+重发前必须确认：
+
+1. 已成功查询到原始 X12 报文
+2. 当前环境是测试环境
+3. 用户明确要求执行重发
+4. 原始报文完整有效
+5. X12 内容放入表单字段 `X12`
+
+---
+
+# 重发实现示例
+
+```python
+import urllib.request
+import urllib.parse
+
+submit_url = "https://edi-staging.item.com:5555/invoke/ATEST_WLG.TEST:SubmitTest"
+
+payload = urllib.parse.urlencode({
+    "X12": x12_payload
+}).encode("utf-8")
+
+request = urllib.request.Request(
+    submit_url,
+    data=payload,
+    headers={
+        "Content-Type": "application/x-www-form-urlencoded"
+    },
+    method="POST"
+)
+
+try:
+    with urllib.request.urlopen(request, timeout=60) as response:
+        response_body = response.read().decode("utf-8", errors="replace")
+
+        result = {
+            "success": True,
+            "http_status": response.status,
+            "response": response_body
+        }
+
+except Exception as e:
+    result = {
+        "success": False,
+        "error": str(e)
+    }
+````
+
+---
+
+# 重发后输出格式
+
+重发完成后，必须返回：
+
+* 是否提交成功
+* HTTP 状态码
+* 接口名称
+* 服务器响应内容
+* 下一步建议
+
+推荐输出格式：
+
+```text
+重发结果：
+- 接口：ATEST_WLG.TEST:SubmitTest
+- HTTP 状态码：
+- 是否成功：
+- 响应内容：
+
+建议：
+- 可继续查询 TN 确认是否生成新的 BizDoc / ActivityLog。
+```
+
+---
+
+# 重发后自动验证（推荐）
+
+重发成功后，建议自动：
+
+1. 再次查询 `edi_transaction_log`
+2. 查询新的 `bizdoc`
+3. 查询 `activitylog`
+4. 确认是否生成新的交易记录
+5. 输出新的 DocID / Internal ID
+
+---
+
+# 安全限制
+
+* 当前重发接口仅允许测试环境使用
+* 禁止用于生产环境
+* 禁止自动循环重发
+* 禁止在未查询到原始报文时执行重发
+* 禁止自动修改 X12 内容
+* 除非用户明确要求，否则禁止编辑报文内容
+
+---
+
+# 错误处理
+
+如果 SubmitTest 返回：
+
+* HTTP 4xx
+* HTTP 5xx
+* timeout
+* connection refused
+
+必须：
+
+1. 返回 HTTP 状态码
+2. 返回错误信息
+3. 返回接口响应内容
+4. 提示用户后续排查方向
+
+不要伪造成功结果。
+
+---
+
+# 示例用户请求
+
+用户：
+
+```text
+查订单 5502240467，并重发 945
+```
+
+你应该：
+
+1. 查询订单对应交易
+2. 找到最新 945 BizDoc
+3. 提取原始 X12 报文
+4. 调用 SubmitTest
+5. 返回 HTTP 状态码和响应
+6. 再查询 TN 验证是否生成新的 BizDoc
+7. 总结结果
+
+```
+```
 
 
