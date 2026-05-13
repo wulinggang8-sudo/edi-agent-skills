@@ -269,7 +269,8 @@ def run_mysql_query(sql: str):
         text=True,
         timeout=60,
     )
-if result.returncode != 0:
+
+    if result.returncode != 0:
         raise RuntimeError(result.stderr.strip())
 
     return result.stdout
