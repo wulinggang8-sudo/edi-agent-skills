@@ -81,15 +81,18 @@ description: webMethods TN / EDI 数据库查询 Skill。支持测试环境 wm10
 
 - `JMS_KEY_ID`
 - `JMS_KEY_SECRET`
-- `EDI_DB_USER`
-- `EDI_DB_PASSWORD`
+- `EDI_TEST_DB_USER`
+- `EDI_TEST_DB_PASSWORD`
+- `EDI_PROD_DB_USER`
+- `EDI_PROD_DB_PASSWORD`
+
 
 如果缺少任何变量，必须直接提示缺少变量，不要伪造。
 
 说明：
 
-- `EDI_DB_USER` / `EDI_DB_PASSWORD` 是长期 MySQL 登录账号密码。
-- 不允许把 JumpServer 临时 token 配到这两个变量里。
+- `EDI_TEST_DB_USER` / `EDI_TEST_DB_PASSWORD`/`EDI_PROD_DB_USER` / `EDI_PROD_DB_PASSWORD` 是长期 MySQL 登录账号密码。
+- 不允许把 JumpServer 临时 token 配到这四个变量里。
 - 不允许要求用户手动输入 `mysql -u token -psecret -h jumpserver.item.com -P 33061`。
 
 # 环境确认规则
@@ -172,31 +175,39 @@ from email.utils import formatdate
 
 BASE = "https://jumpserver.item.com"
 ORG_ID = "00000000-0000-0000-0000-000000000002"
-
+KEY_ID = os.getenv("JMS_KEY_ID")
+KEY_SECRET = os.getenv("JMS_KEY_SECRET")
+TEST_INPUT_USERNAME = os.getenv("EDI_TEST_DB_USER")
+TEST_INPUT_SECRET = os.getenv("EDI_TEST_DB_PASSWORD")
+PROD_INPUT_USERNAME = os.getenv("EDI_PROD_DB_USER")
+PROD_INPUT_SECRET = os.getenv("EDI_PROD_DB_PASSWORD")
 ENV_CONFIG = {
     "test": {
         "asset": "160052ac-1132-489b-ab19-ca0928276140",
         "database": "wm1015",
         "connect_method": "db_client",
+        "input_username": TEST_INPUT_USERNAME,
+        "input_secret": TEST_INPUT_SECRET,
     },
     "prod": {
         "asset": "cc3d9644-938b-48f8-a6fd-93083af7e862",
         "database": "linker_edi",
         "connect_method": "db_guide",
+        "input_username": PROD_INPUT_USERNAME,
+        "input_secret": PROD_INPUT_SECRET,
     },
 }
 
-KEY_ID = os.getenv("JMS_KEY_ID")
-KEY_SECRET = os.getenv("JMS_KEY_SECRET")
-INPUT_USERNAME = os.getenv("EDI_DB_USER")
-INPUT_SECRET = os.getenv("EDI_DB_PASSWORD")
+
 
 missing = [
     name for name, value in {
         "JMS_KEY_ID": KEY_ID,
         "JMS_KEY_SECRET": KEY_SECRET,
-        "EDI_DB_USER": INPUT_USERNAME,
-        "EDI_DB_PASSWORD": INPUT_SECRET,
+        "EDI_TEST_DB_USER": TEST_INPUT_USERNAME,
+        "EDI_TEST_DB_PASSWORD": TEST_INPUT_SECRET,
+        "EDI_PROD_DB_USER": PROD_INPUT_USERNAME,
+        "EDI_PROD_DB_PASSWORD": PROD_INPUT_SECRET,
     }.items()
     if not value
 ]
@@ -270,8 +281,8 @@ def create_mysql_token(env: str):
             "account": "@INPUT",
             "protocol": "mysql",
             "connect_method": config["connect_method"],
-            "input_username": INPUT_USERNAME,
-            "input_secret": INPUT_SECRET,
+            "input_username": config["input_username"],
+            "input_secret": config["input_secret"],
         },
     )
 
