@@ -224,7 +224,8 @@ def run_mysql_query(sql: str):
         raise RuntimeError(result.stderr.strip())
 
     return result.stdout
-````
+
+```
 # 查询策略
 
 如果用户给订单号，例如：
