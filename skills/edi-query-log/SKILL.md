@@ -1,4 +1,4 @@
-<img width="1191" height="159" alt="image" src="https://github.com/user-attachments/assets/287d71b8-81b7-40e1-99bb-3edd1d55da40" />---
+---
 name: EDI-LOG-QUERY
 description: webMethods TN / EDI 数据库查询 Skill。支持测试环境 wm1015 和生产环境 linker_edi，只读查询；测试环境支持报文重发。
 ---
