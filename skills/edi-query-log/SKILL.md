@@ -246,6 +246,8 @@ WHERE NativeID = '5502240467'
 ORDER BY LastModified DESC
 LIMIT 20;
 
+如果还是没有查到：全文检索的方式对报文底层 Payload 进行了深度查询。
+
 输出要求
 
 默认中文回答。
