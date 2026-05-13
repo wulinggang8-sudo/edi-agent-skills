@@ -369,7 +369,6 @@ except Exception as e:
 
 ```text
 重发结果：
-- 接口：ATEST_WLG.TEST:SubmitTest
 - HTTP 状态码：
 - 是否成功：
 - 响应内容：
