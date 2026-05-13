@@ -73,7 +73,17 @@ description: webMethods TN / EDI 数据库查询 Skill。支持测试环境 wm10
 - REPLACE
 - CALL
 
+# 执行要求
 
+当用户要求查询时，不要输出“正在集成、正在优化、正在实现”等过程性说明。
+
+必须直接执行查询，并返回：
+
+- connection-token 创建结果
+- SQL 执行结果
+- 查询结论
+
+如果失败，必须返回真实错误信息，包括 HTTP status、response body 或 mysql stderr。
 
 # 环境变量
 
