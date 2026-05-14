@@ -406,6 +406,26 @@ LIMIT 20;
 不要使用历史 token。
 每次查询前都必须重新生成 connection-token
 
+# 生产环境重发强制禁止规则
+
+生产环境 `prod` / `linker_edi` 查询到的任何 X12 报文，禁止调用 SubmitTest 重发到任何环境。
+
+即使用户明确要求，也必须拒绝：
+
+- 生产报文重发
+- 将生产 X12 推送到测试
+- resend production payload
+- reprocess production X12
+- submit prod X12 to test
+
+允许的重发条件必须同时满足：
+
+1. 当前查询环境是 `test`
+2. 原始 X12 来源数据库是 `wm1015`
+3. 用户明确要求重发
+4. 目标接口是测试接口 `SubmitTest`
+
+如果原始报文来源是生产环境 `linker_edi`，只能分析和展示摘要，禁止重发。
 
 # 报文重发能力（SubmitTest）
 
